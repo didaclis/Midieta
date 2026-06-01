@@ -29,18 +29,15 @@ html, body {
   background: var(--bg);
   color: var(--text);
   height: 100%;
-  overflow: hidden;
+  margin: 0;
 }
 
 /* ── LAYOUT ── */
 .app {
-  display: flex;
-  flex-direction: column;
-  height: 100dvh;
   max-width: 430px;
   margin: 0 auto;
   position: relative;
-  overflow: hidden;
+  min-height: 100dvh;
 }
 
 /* ── HEADER ── */
@@ -48,9 +45,9 @@ html, body {
   background: var(--surface);
   padding: 1rem 1.2rem 0.8rem;
   border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
-  position: relative;
-  z-index: 10;
+  position: sticky;
+  top: 0;
+  z-index: 50;
 }
 
 .header-top {
@@ -82,11 +79,7 @@ html, body {
 
 /* ── SCROLL CONTENT ── */
 .scroll-area {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
-  scroll-behavior: smooth;
+  width: 100%;
 }
 
 /* ── BOTTOM NAV ── */
@@ -94,7 +87,9 @@ html, body {
   display: flex;
   background: var(--surface);
   border-top: 1px solid var(--border);
-  flex-shrink: 0;
+  position: sticky;
+  bottom: 0;
+  z-index: 50;
   padding-bottom: env(safe-area-inset-bottom, 0);
 }
 
@@ -103,28 +98,27 @@ html, body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0.55rem 0.2rem 0.45rem;
+  padding: 0.5rem 0.1rem 0.4rem;
   cursor: pointer;
   border: none;
   background: transparent;
   color: var(--muted);
   font-family: 'Instrument Sans', sans-serif;
-  font-size: 0.6rem;
+  font-size: 0.55rem;
   font-weight: 400;
-  gap: 0.2rem;
+  gap: 0.15rem;
   transition: color 0.2s;
   -webkit-tap-highlight-color: transparent;
   min-width: 0;
 }
 
 .nav-btn.active { color: var(--green); }
-.nav-btn .nav-icon { font-size: 1.3rem; transition: transform 0.2s; }
+.nav-btn .nav-icon { font-size: 1.15rem; transition: transform 0.2s; }
 .nav-btn.active .nav-icon { transform: scale(1.1); }
 
 /* ── SCREENS ── */
-.screen { display: none; padding: 1rem; }
+.screen { display: none; padding: 1rem 1rem 2rem; }
 .screen.active { display: block; }
-@keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
 
 /* ── SECTION TITLE ── */
 .section-title {
@@ -1038,6 +1032,9 @@ textarea.form-input { resize: none; min-height: 60px; }
     <button class="nav-btn" id="nav-recetas" onclick="switchTab('recetas')">
       <span class="nav-icon">👨‍🍳</span>Recetas
     </button>
+    <button class="nav-btn" id="nav-ejercicio" onclick="switchTab('ejercicio')">
+      <span class="nav-icon">💪</span>Gym
+    </button>
     <button class="nav-btn" id="nav-lista" onclick="switchTab('lista')">
       <span class="nav-icon">🛒</span>Lista
     </button>
@@ -1213,6 +1210,48 @@ textarea.form-input { resize: none; min-height: 60px; }
       <div id="weekSummarySection"></div>
     </div>
 
+    <!-- ══ EJERCICIO SCREEN ══ -->
+    <div class="screen" id="screen-ejercicio" style="background:#f5f2ed;">
+      <div style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;margin-bottom:0.9rem;letter-spacing:-0.02em;">Entrenamiento 💪</div>
+
+      <!-- CONFIG -->
+      <div style="background:#ffffff;border-radius:16px;padding:1.1rem;margin-bottom:0.8rem;box-shadow:0 2px 16px rgba(0,0,0,0.07);">
+        <div style="font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:700;margin-bottom:0.8rem;color:#1a1a1a;">Configuración</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-bottom:0.8rem;">
+          <div>
+            <div style="font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#7a7570;margin-bottom:0.3rem;">Días/semana</div>
+            <select id="trainDays" style="width:100%;background:#faf8f5;border:1.5px solid #e8e3dc;border-radius:10px;padding:0.6rem 0.7rem;font-family:'Instrument Sans',sans-serif;font-size:0.85rem;color:#1a1a1a;outline:none;box-sizing:border-box;">
+              <option value="3">3 días</option>
+              <option value="4" selected>4 días</option>
+              <option value="5">5 días</option>
+              <option value="6">6 días</option>
+            </select>
+          </div>
+          <div>
+            <div style="font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#7a7570;margin-bottom:0.3rem;">Nivel</div>
+            <select id="trainLevel" style="width:100%;background:#faf8f5;border:1.5px solid #e8e3dc;border-radius:10px;padding:0.6rem 0.7rem;font-family:'Instrument Sans',sans-serif;font-size:0.85rem;color:#1a1a1a;outline:none;box-sizing:border-box;">
+              <option value="beginner">Principiante</option>
+              <option value="intermediate" selected>Intermedio</option>
+              <option value="advanced">Avanzado</option>
+            </select>
+          </div>
+        </div>
+        <button onclick="buildWorkoutPlan()" style="width:100%;background:#2d6a4f;color:white;border:none;border-radius:12px;padding:0.8rem;font-family:'Syne',sans-serif;font-size:0.88rem;font-weight:700;cursor:pointer;">
+          🔄 Generar rutina
+        </button>
+      </div>
+
+      <!-- WEEK OVERVIEW -->
+      <div id="workoutWeekEl"></div>
+
+      <!-- DAY DETAIL -->
+      <div id="workoutDayEl"></div>
+
+      <!-- EXERCISE MODAL DETAIL -->
+      <div id="exerciseDetailEl"></div>
+
+    </div>
+
   </div><!-- end scroll-area -->
 
 
@@ -1386,7 +1425,7 @@ function selectDay(i) {
   currentDay = i;
   document.querySelectorAll('.day-chip').forEach((c,j) => c.classList.toggle('active', i===j));
   renderDayContent();
-  document.getElementById('scrollArea').scrollTop = 0;
+  window.scrollTo(0,0);
 }
 
 function renderDayContent() {
@@ -1930,14 +1969,14 @@ function openRecipe(id) {
     btn.classList.remove('added');
     btn.innerHTML = '🛒 Añadir ingredientes a la lista';
   }
-  document.getElementById('scrollArea').scrollTop = 0;
+  window.scrollTo(0,0);
 }
 
 function closeRecipe() {
   document.getElementById('recipeList').style.display = 'block';
   document.getElementById('recipeDetail').classList.remove('active');
   currentRecipe = null;
-  document.getElementById('scrollArea').scrollTop = 0;
+  window.scrollTo(0,0);
 }
 
 function addRecipeToList() {
@@ -2054,11 +2093,11 @@ function switchTab(tab) {
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('screen-' + tab).classList.add('active');
   document.getElementById('nav-' + tab).classList.add('active');
-  document.getElementById('scrollArea').scrollTop = 0;
-  // Run tab-specific logic AFTER screen is visible
+  window.scrollTo(0, 0);
   try {
     if (tab === 'lista') renderShoppingList();
     if (tab === 'objetivos') { loadProfileForm(); renderWeekSummary(); }
+    if (tab === 'ejercicio') initExerciseScreen();
     if (tab === 'recetas') {
       document.getElementById('recipeList').style.display = 'block';
       document.getElementById('recipeDetail').classList.remove('active');
@@ -2077,6 +2116,377 @@ function showToast(msg) {
   t.classList.add('show');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ══════════════════════════════════════
+// EXERCISE MODULE
+// ══════════════════════════════════════
+
+const exerciseDB = {
+  // PUSH
+  "flexiones": {name:"Flexiones",emoji:"🫸",muscle:"Pecho · Tríceps · Hombros",type:"push",
+    sets:{beginner:"3×8",intermediate:"4×12",advanced:"4×20"},
+    desc:"Posición de plancha, manos a la anchura de los hombros. Baja el pecho hasta casi tocar el suelo, sube empujando fuerte.",
+    tips:["Mantén el core tenso todo el tiempo","Codos a 45° del cuerpo, no abiertos","Exhala al subir"]},
+  "flexiones-diamante": {name:"Flexiones diamante",emoji:"💎",muscle:"Tríceps · Pecho interior",type:"push",
+    sets:{beginner:"3×6",intermediate:"3×12",advanced:"4×16"},
+    desc:"Manos juntas formando un diamante bajo el pecho. Baja lentamente y sube explosivo.",
+    tips:["Más difícil que las normales, va despacio","Los codos rozan el cuerpo al bajar","Ideal para definir tríceps"]},
+  "pino-pared": {name:"Flexión en pino (pared)",emoji:"🙃",muscle:"Hombros · Tríceps",type:"push",
+    sets:{beginner:"3×3",intermediate:"3×8",advanced:"4×12"},
+    desc:"Con la espalda en la pared, haz el pino apoyado. Baja la cabeza hacia el suelo y sube.",
+    tips:["Empieza con el pino sostenido si no llegas","La pared da seguridad","Activa mucho el core"]},
+  "dips-silla": {name:"Dips en silla",emoji:"🪑",muscle:"Tríceps · Pecho bajo",type:"push",
+    sets:{beginner:"3×8",intermediate:"4×12",advanced:"4×18"},
+    desc:"Manos en el borde de una silla sólida, pies al frente. Baja doblando los codos hasta 90° y sube.",
+    tips:["Espalda pegada al borde de la silla","Cuanto más lejos los pies, más difícil","No bajes más de 90° para proteger hombros"]},
+  // PULL
+  "remo-mochila": {name:"Remo con mochila",emoji:"🎒",muscle:"Espalda · Bíceps",type:"pull",
+    sets:{beginner:"3×10",intermediate:"4×12",advanced:"4×15"},
+    desc:"Apoya una mano y rodilla en una silla. Con la otra mano sube una mochila cargada hacia la cadera.",
+    tips:["Carga la mochila con libros o botellas","El codo sube pegado al cuerpo","No gires el torso"]},
+  "superman": {name:"Superman",emoji:"🦸",muscle:"Lumbares · Glúteos · Espalda alta",type:"pull",
+    sets:{beginner:"3×12",intermediate:"4×15",advanced:"4×20"},
+    desc:"Boca abajo en el suelo. Levanta simultáneamente brazos y piernas aguantando 2 segundos arriba.",
+    tips:["Mantén el cuello neutro mirando al suelo","Aprieta glúteos al subir","Ideal para compensar horas de silla"]},
+  "face-pull-banda": {name:"Face pull (toalla en puerta)",emoji:"🚪",muscle:"Hombros posteriores · Espalda alta",type:"pull",
+    sets:{beginner:"3×12",intermediate:"3×15",advanced:"4×20"},
+    desc:"Ata una toalla enrollada a una puerta. Agárrala con ambas manos y tira hacia tu cara separando los codos.",
+    tips:["Los codos siempre por encima de los hombros","Movimiento lento y controlado","Excelente para postura"]},
+  // LEGS
+  "sentadilla": {name:"Sentadilla",emoji:"🦵",muscle:"Cuádriceps · Glúteos · Isquios",type:"legs",
+    sets:{beginner:"3×12",intermediate:"4×15",advanced:"4×20"},
+    desc:"Pies a la anchura de los hombros, puntas ligeramente hacia fuera. Baja como si fueras a sentarte, rodillas en línea con los pies.",
+    tips:["El peso en los talones, no en las puntas","Baja hasta que los muslos estén paralelos al suelo","Rodillas no pasan la punta de los pies en exceso"]},
+  "zancada": {name:"Zancadas",emoji:"🚶",muscle:"Cuádriceps · Glúteos · Isquios",type:"legs",
+    sets:{beginner:"3×10",intermediate:"3×14",advanced:"4×16"},
+    desc:"Da un paso largo hacia delante y baja la rodilla trasera hacia el suelo. Vuelve y alterna piernas.",
+    tips:["El torso recto durante todo el movimiento","La rodilla delantera no pasa la punta del pie","Puedes añadir peso con una mochila"]},
+  "sentadilla-bulgara": {name:"Sentadilla búlgara",emoji:"🏋️",muscle:"Cuádriceps · Glúteos",type:"legs",
+    sets:{beginner:"3×8",intermediate:"3×12",advanced:"4×15"},
+    desc:"Pie trasero elevado en una silla. Baja con la pierna delantera hasta casi tocar el suelo con la rodilla trasera.",
+    tips:["El pie delantero suficientemente adelantado","De los ejercicios más duros para piernas","Excelente para asimetrías"]},
+  "puente-gluteo": {name:"Puente de glúteo",emoji:"🌉",muscle:"Glúteos · Isquios · Core",type:"legs",
+    sets:{beginner:"3×15",intermediate:"4×20",advanced:"4×25"},
+    desc:"Tumbado boca arriba, rodillas dobladas, pies en el suelo. Sube las caderas apretando los glúteos al máximo.",
+    tips:["Aguanta 1 segundo arriba apretando fuerte","Puedes poner un peso encima de las caderas","Versión avanzada: una sola pierna"]},
+  "saltos-sentadilla": {name:"Saltos en sentadilla",emoji:"⬆️",muscle:"Piernas completo · Cardio",type:"legs",
+    sets:{beginner:"3×8",intermediate:"3×12",advanced:"4×15"},
+    desc:"Baja en sentadilla y sube explosivamente saltando. Aterriza suave con las rodillas ligeramente flexionadas.",
+    tips:["Aterriza suave para no dañar rodillas","Excelente para quemar grasa","Descansa si sientes las rodillas"]},
+  // CORE
+  "plancha": {name:"Plancha",emoji:"📏",muscle:"Core completo",type:"core",
+    sets:{beginner:"3×20s",intermediate:"3×45s",advanced:"4×60s"},
+    desc:"Apoyado en antebrazos y puntas de los pies. Cuerpo recto como una tabla. Mantén la posición.",
+    tips:["No dejes caer las caderas ni subir el trasero","Respira con normalidad","Mira al suelo, cuello neutro"]},
+  "crunch": {name:"Crunch",emoji:"🔄",muscle:"Abdomen superior",type:"core",
+    sets:{beginner:"3×15",intermediate:"4×20",advanced:"4×25"},
+    desc:"Tumbado, rodillas flexionadas. Sube los hombros del suelo contrayendo el abdomen. No tires del cuello.",
+    tips:["Las manos en las sienes, no en la nuca","Solo suben los hombros, no la espalda entera","Exhala al subir"]},
+  "mountain-climber": {name:"Mountain climbers",emoji:"🏔️",muscle:"Core · Cardio · Hombros",type:"core",
+    sets:{beginner:"3×20s",intermediate:"3×35s",advanced:"4×45s"},
+    desc:"En posición de flexión. Lleva alternamente las rodillas hacia el pecho de forma rápida.",
+    tips:["Las caderas abajo, no arriba","Cuanto más rápido, más cardio","Buen calentamiento también"]},
+  "plancha-lateral": {name:"Plancha lateral",emoji:"↔️",muscle:"Oblicuos · Core",type:"core",
+    sets:{beginner:"3×15s",intermediate:"3×30s",advanced:"4×45s"},
+    desc:"Apoyado en un antebrazo y el borde del pie. Cuerpo recto lateral. Mantén la posición.",
+    tips:["Las caderas bien arriba durante todo el ejercicio","Puedes apoyar la rodilla si es muy difícil","Alterna los dos lados"]},
+  "elevacion-piernas": {name:"Elevación de piernas",emoji:"🦿",muscle:"Abdomen inferior",type:"core",
+    sets:{beginner:"3×10",intermediate:"3×15",advanced:"4×20"},
+    desc:"Tumbado boca arriba, manos bajo los glúteos. Sube las piernas estiradas hasta 90° y baja sin tocar el suelo.",
+    tips:["La zona lumbar pegada al suelo siempre","Baja lento es más difícil y efectivo","Si duele la espalda, dobla un poco las rodillas"]},
+  // CARDIO EXTERIOR
+  "carrera-continua": {name:"Carrera continua",emoji:"🏃",muscle:"Cardio · Piernas · Resistencia",type:"cardio-ext",
+    sets:{beginner:"20 min ritmo suave",intermediate:"35 min ritmo moderado",advanced:"50 min ritmo sostenido"},
+    desc:"Corre a un ritmo en el que puedas mantener una conversación. Sin parar, constante. El objetivo es el tiempo, no la velocidad.",
+    tips:["Ritmo al que puedas hablar — si no puedes, ve más lento","Aterriza con el mediopié, no con el talón","Brazos relajados a 90°, no cruzar el cuerpo"]},
+  "intervalos": {name:"Intervalos (HIIT carrera)",emoji:"⚡",muscle:"Cardio intenso · Quema grasa",type:"cardio-ext",
+    sets:{beginner:"6× (30s rápido + 90s andando)",intermediate:"8× (45s rápido + 60s trot suave)",advanced:"10× (60s sprint + 60s trote)"},
+    desc:"Alterna sprints cortos con recuperación activa. El entrenamiento más eficiente para quemar grasa.",
+    tips:["Calienta 5 min caminando antes de empezar","El sprint debe ser al 85-90% de tu máximo","Enfría 5 min caminando al terminar"]},
+  "fartlek": {name:"Fartlek",emoji:"🌳",muscle:"Cardio · Resistencia variable",type:"cardio-ext",
+    sets:{beginner:"25 min (juega con el ritmo)",intermediate:"40 min",advanced:"55 min"},
+    desc:"Corre variando el ritmo libremente según cómo te sientas o el terreno. Sube fuerte las cuestas, baja suave, acelera por la recta.",
+    tips:["Sin estructura rígida — escucha tu cuerpo","Ideal para romper la monotonía","Perfecta para terreno variado o parques"]},
+  "caminata-rapida": {name:"Caminata rápida",emoji:"🚶",muscle:"Cardio suave · Recuperación activa",type:"cardio-ext",
+    sets:{beginner:"30 min",intermediate:"45 min",advanced:"60 min"},
+    desc:"Camina a paso rápido, brazos activos, postura erguida. Ideal como recuperación activa o en días que no te apetece correr.",
+    tips:["Mueve los brazos activamente para quemar más","Mete cuestas si puedes","Perfecto para el día después de piernas intenso"]},
+  // CARDIO CASA
+  "burpee": {name:"Burpees",emoji:"🌀",muscle:"Cuerpo completo · Cardio",type:"cardio",
+    sets:{beginner:"3×5",intermediate:"3×10",advanced:"4×15"},
+    desc:"De pie, baja al suelo, haz una flexión, salta de vuelta arriba con los brazos al cielo.",
+    tips:["El ejercicio más completo que existe","Puedes omitir la flexión para hacerlo más fácil","Descansa lo que necesites entre series"]},
+  "jumping-jacks": {name:"Jumping jacks",emoji:"⭐",muscle:"Cardio · Cuerpo completo",type:"cardio",
+    sets:{beginner:"3×30s",intermediate:"3×45s",advanced:"4×60s"},
+    desc:"De pie, salta abriendo brazos y piernas simultáneamente y vuelve a cerrar.",
+    tips:["Buen calentamiento o finalizador","Aterriza suave","Mantén el ritmo constante"]},
+  "carrera-sitio": {name:"Carrera en el sitio",emoji:"🏃",muscle:"Cardio · Piernas",type:"cardio",
+    sets:{beginner:"3×30s",intermediate:"3×60s",advanced:"4×90s"},
+    desc:"Corre en el mismo sitio levantando las rodillas por encima de la cadera.",
+    tips:["Los brazos se mueven como al correr","Cuanto más altas las rodillas, más intenso","Bueno para calentar o para HIIT"]},
+};
+
+const workoutPlans = {
+  3: {
+    beginner: [
+      {day:"Lunes",type:"Cuerpo completo A",exercises:["flexiones","sentadilla","plancha","puente-gluteo","crunch"]},
+      {day:"Miércoles",type:"Cuerpo completo B",exercises:["dips-silla","zancada","mountain-climber","superman","jumping-jacks"]},
+      {day:"Viernes",type:"Cuerpo completo C",exercises:["flexiones-diamante","sentadilla-bulgara","plancha-lateral","remo-mochila","burpee"]},
+    ],
+    intermediate: [
+      {day:"Lunes",type:"Empuje + Core",exercises:["flexiones","dips-silla","pino-pared","plancha","crunch","mountain-climber"]},
+      {day:"Miércoles",type:"Piernas + Cardio",exercises:["sentadilla","zancada","sentadilla-bulgara","puente-gluteo","saltos-sentadilla","carrera-sitio"]},
+      {day:"Viernes",type:"Tirón + Core",exercises:["remo-mochila","superman","face-pull-banda","plancha-lateral","elevacion-piernas","burpee"]},
+    ],
+    advanced: [
+      {day:"Lunes",type:"Empuje intenso",exercises:["flexiones","pino-pared","flexiones-diamante","dips-silla","mountain-climber","burpee"]},
+      {day:"Miércoles",type:"Piernas intenso",exercises:["sentadilla-bulgara","zancada","saltos-sentadilla","puente-gluteo","sentadilla","carrera-sitio"]},
+      {day:"Viernes",type:"Tirón + Core completo",exercises:["remo-mochila","face-pull-banda","superman","plancha","plancha-lateral","elevacion-piernas"]},
+    ]
+  },
+  4: {
+    beginner: [
+      {day:"Lunes",type:"Empuje",exercises:["flexiones","dips-silla","flexiones-diamante","plancha"]},
+      {day:"Martes",type:"Piernas",exercises:["sentadilla","zancada","puente-gluteo","saltos-sentadilla"]},
+      {day:"Jueves",type:"Tirón + Core",exercises:["remo-mochila","superman","face-pull-banda","crunch"]},
+      {day:"Sábado",type:"Cardio + Core",exercises:["burpee","jumping-jacks","mountain-climber","plancha-lateral"]},
+    ],
+    intermediate: [
+      {day:"Lunes",type:"Empuje",exercises:["flexiones","pino-pared","dips-silla","flexiones-diamante","mountain-climber"]},
+      {day:"Martes",type:"Piernas",exercises:["sentadilla","sentadilla-bulgara","zancada","puente-gluteo","saltos-sentadilla"]},
+      {day:"Jueves",type:"Tirón + Hombros",exercises:["remo-mochila","superman","face-pull-banda","plancha","burpee"]},
+      {day:"Sábado",type:"Cardio exterior 🏃",exercises:["carrera-continua","fartlek"]},
+    ],
+    advanced: [
+      {day:"Lunes",type:"Empuje",exercises:["pino-pared","flexiones","flexiones-diamante","dips-silla","mountain-climber","burpee"]},
+      {day:"Martes",type:"Piernas",exercises:["sentadilla-bulgara","saltos-sentadilla","zancada","puente-gluteo","sentadilla","carrera-sitio"]},
+      {day:"Jueves",type:"Tirón",exercises:["remo-mochila","face-pull-banda","superman","plancha-lateral","elevacion-piernas"]},
+      {day:"Sábado",type:"Cardio exterior 🏃",exercises:["intervalos","fartlek"]},
+    ]
+  },
+  5: {
+    beginner: [
+      {day:"Lunes",type:"Pecho + Tríceps",exercises:["flexiones","dips-silla","flexiones-diamante","plancha"]},
+      {day:"Martes",type:"Piernas",exercises:["sentadilla","zancada","puente-gluteo"]},
+      {day:"Miércoles",type:"Cardio exterior 🏃",exercises:["caminata-rapida","carrera-continua"]},
+      {day:"Jueves",type:"Espalda + Bíceps",exercises:["remo-mochila","superman","face-pull-banda"]},
+      {day:"Sábado",type:"Core completo",exercises:["plancha","crunch","plancha-lateral","elevacion-piernas"]},
+    ],
+    intermediate: [
+      {day:"Lunes",type:"Empuje",exercises:["flexiones","pino-pared","dips-silla","mountain-climber"]},
+      {day:"Martes",type:"Piernas",exercises:["sentadilla","sentadilla-bulgara","zancada","saltos-sentadilla"]},
+      {day:"Miércoles",type:"Cardio exterior 🏃",exercises:["carrera-continua","fartlek"]},
+      {day:"Jueves",type:"Tirón",exercises:["remo-mochila","face-pull-banda","superman","burpee"]},
+      {day:"Sábado",type:"Full body + Cardio",exercises:["flexiones","sentadilla","burpee","jumping-jacks","mountain-climber"]},
+    ],
+    advanced: [
+      {day:"Lunes",type:"Empuje",exercises:["pino-pared","flexiones","flexiones-diamante","dips-silla","mountain-climber"]},
+      {day:"Martes",type:"Piernas",exercises:["sentadilla-bulgara","saltos-sentadilla","zancada","puente-gluteo","sentadilla"]},
+      {day:"Miércoles",type:"Cardio exterior 🏃",exercises:["intervalos","fartlek"]},
+      {day:"Jueves",type:"Tirón",exercises:["remo-mochila","face-pull-banda","superman","flexiones-diamante"]},
+      {day:"Sábado",type:"HIIT",exercises:["burpee","saltos-sentadilla","carrera-sitio","jumping-jacks","mountain-climber","plancha"]},
+    ]
+  },
+  6: {
+    beginner: [
+      {day:"Lunes",type:"Pecho + Tríceps",exercises:["flexiones","dips-silla","flexiones-diamante"]},
+      {day:"Martes",type:"Piernas",exercises:["sentadilla","zancada","puente-gluteo"]},
+      {day:"Miércoles",type:"Espalda + Bíceps",exercises:["remo-mochila","superman","face-pull-banda"]},
+      {day:"Jueves",type:"Cardio exterior 🏃",exercises:["caminata-rapida","carrera-continua"]},
+      {day:"Viernes",type:"Hombros + Core",exercises:["pino-pared","plancha","crunch","plancha-lateral"]},
+      {day:"Sábado",type:"Piernas + Core",exercises:["sentadilla-bulgara","saltos-sentadilla","elevacion-piernas","plancha"]},
+    ],
+    intermediate: [
+      {day:"Lunes",type:"Empuje",exercises:["flexiones","pino-pared","dips-silla","mountain-climber"]},
+      {day:"Martes",type:"Piernas A",exercises:["sentadilla","zancada","sentadilla-bulgara","puente-gluteo"]},
+      {day:"Miércoles",type:"Tirón + Core",exercises:["remo-mochila","face-pull-banda","superman","plancha","crunch"]},
+      {day:"Jueves",type:"Cardio exterior 🏃",exercises:["carrera-continua","fartlek"]},
+      {day:"Viernes",type:"Empuje + Core",exercises:["flexiones-diamante","dips-silla","plancha-lateral","elevacion-piernas"]},
+      {day:"Sábado",type:"Piernas B",exercises:["saltos-sentadilla","sentadilla-bulgara","puente-gluteo","zancada"]},
+    ],
+    advanced: [
+      {day:"Lunes",type:"Empuje A",exercises:["pino-pared","flexiones","flexiones-diamante","mountain-climber","burpee"]},
+      {day:"Martes",type:"Piernas A",exercises:["sentadilla-bulgara","saltos-sentadilla","zancada","sentadilla","carrera-sitio"]},
+      {day:"Miércoles",type:"Cardio exterior 🏃",exercises:["intervalos","fartlek"]},
+      {day:"Jueves",type:"HIIT",exercises:["burpee","mountain-climber","jumping-jacks","carrera-sitio","saltos-sentadilla"]},
+      {day:"Viernes",type:"Empuje B",exercises:["flexiones","dips-silla","pino-pared","flexiones-diamante","crunch"]},
+      {day:"Sábado",type:"Piernas B + Core",exercises:["puente-gluteo","sentadilla-bulgara","zancada","plancha","elevacion-piernas"]},
+    ]
+  }
+};
+
+// Workout state
+let workoutPlan = JSON.parse(localStorage.getItem('workoutPlan') || 'null');
+let workoutLog  = JSON.parse(localStorage.getItem('workoutLog')  || '{}');
+let selectedWorkoutDay = null;
+
+function buildWorkoutPlan() {
+  const days  = parseInt(document.getElementById('trainDays').value);
+  const level = document.getElementById('trainLevel').value;
+  workoutPlan = { days, level, sessions: workoutPlans[days][level] };
+  localStorage.setItem('workoutPlan', JSON.stringify(workoutPlan));
+  renderWorkoutWeek();
+  showToast('Rutina generada ✓');
+}
+
+function renderWorkoutWeek() {
+  const el = document.getElementById('workoutWeekEl');
+  if (!workoutPlan) {
+    el.innerHTML = `<div style="text-align:center;padding:2rem 1rem;color:#7a7570;font-size:0.85rem;">Configura tus días y genera la rutina ☝️</div>`;
+    return;
+  }
+
+  const weekDays = ['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
+  const today = weekDays[new Date().getDay() === 0 ? 6 : new Date().getDay() - 1];
+  const weekKey = getWeekKey();
+
+  let html = `<div style="font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:700;margin-bottom:0.6rem;color:#1a1a1a;">Semana — ${workoutPlan.days} días · ${workoutPlan.level === 'beginner' ? 'Principiante' : workoutPlan.level === 'intermediate' ? 'Intermedio' : 'Avanzado'}</div>`;
+
+  workoutPlan.sessions.forEach((s, i) => {
+    const logKey = `${weekKey}-${s.day}`;
+    const done = !!workoutLog[logKey];
+    const isToday = s.day === today;
+    const isCardioExt = s.type.includes('exterior');
+    html += `
+      <div onclick="openWorkoutDay(${i})" style="background:${isToday ? 'linear-gradient(135deg,#1a2f23,#2d6a4f)' : '#ffffff'};border-radius:16px;padding:1rem 1.1rem;margin-bottom:0.6rem;box-shadow:0 2px 16px rgba(0,0,0,0.07);cursor:pointer;display:flex;align-items:center;gap:0.8rem;">
+        <div style="width:44px;height:44px;border-radius:12px;background:${isToday ? 'rgba(255,255,255,0.15)' : done ? '#d8f3dc' : '#f5f2ed'};display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;">
+          ${done ? '✅' : isToday ? '🔥' : isCardioExt ? '🏃' : '💪'}
+        </div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-family:'Syne',sans-serif;font-size:0.88rem;font-weight:700;color:${isToday ? 'white' : '#1a1a1a'};">${s.day}</div>
+          <div style="font-size:0.72rem;color:${isToday ? 'rgba(255,255,255,0.75)' : '#7a7570'};margin-top:0.1rem;">${s.type} · ${s.exercises.length} ejercicios</div>
+        </div>
+        <div style="font-size:0.8rem;color:${isToday ? 'rgba(255,255,255,0.6)' : '#aaa'};">›</div>
+      </div>`;
+  });
+
+  weekDays.forEach(d => {
+    if (!workoutPlan.sessions.find(s => s.day === d)) {
+      html += `
+        <div style="background:#ffffff;border-radius:16px;padding:0.85rem 1.1rem;margin-bottom:0.6rem;box-shadow:0 2px 16px rgba(0,0,0,0.07);display:flex;align-items:center;gap:0.8rem;opacity:0.45;">
+          <div style="width:44px;height:44px;border-radius:12px;background:#f5f2ed;display:flex;align-items:center;justify-content:center;font-size:1.3rem;">😴</div>
+          <div>
+            <div style="font-family:'Syne',sans-serif;font-size:0.88rem;font-weight:700;color:#1a1a1a;">${d}</div>
+            <div style="font-size:0.72rem;color:#7a7570;">Descanso · Recuperación activa</div>
+          </div>
+        </div>`;
+    }
+  });
+
+  el.innerHTML = html;
+  document.getElementById('workoutDayEl').innerHTML = '';
+  document.getElementById('exerciseDetailEl').innerHTML = '';
+}
+
+function getWeekKey() {
+  const d = new Date();
+  const day = d.getDay() || 7;
+  const monday = new Date(d);
+  monday.setDate(d.getDate() - day + 1);
+  return monday.toISOString().split('T')[0];
+}
+
+function openWorkoutDay(idx) {
+  selectedWorkoutDay = idx;
+  const s = workoutPlan.sessions[idx];
+  const weekKey = getWeekKey();
+  const logKey = `${weekKey}-${s.day}`;
+  const done = !!workoutLog[logKey];
+  const isCardioExt = s.type.includes('exterior');
+
+  let exHtml = s.exercises.map(exId => {
+    const ex = exerciseDB[exId];
+    if (!ex) return '';
+    const sets = ex.sets[workoutPlan.level];
+    const typeColors = {push:'#fde8d8',pull:'#e8f4fd',legs:'#d8f3dc',core:'#f5e6f8',cardio:'#fff3cd','cardio-ext':'#e0f0ff'};
+    const typeText   = {push:'Empuje',pull:'Tirón',legs:'Piernas',core:'Core',cardio:'Cardio','cardio-ext':'🏃 Exterior'};
+    const isExt = ex.type === 'cardio-ext';
+    return `
+      <div onclick="openExerciseDetail('${exId}')" style="background:#ffffff;border-radius:14px;padding:0.9rem 1rem;margin-bottom:0.5rem;display:flex;align-items:center;gap:0.8rem;cursor:pointer;box-shadow:0 1px 8px rgba(0,0,0,0.05);">
+        <div style="width:42px;height:42px;border-radius:11px;background:${typeColors[ex.type]||'#f0f0f0'};display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;">${ex.emoji}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:700;color:#1a1a1a;">${ex.name}</div>
+          <div style="font-size:0.7rem;color:#7a7570;margin-top:0.1rem;">${ex.muscle}</div>
+        </div>
+        <div style="text-align:right;flex-shrink:0;">
+          <div style="font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;color:#2d6a4f;">${sets}</div>
+          <div style="font-size:0.62rem;color:#aaa;margin-top:0.1rem;">${typeText[ex.type]||''}</div>
+        </div>
+      </div>`;
+  }).join('');
+
+  document.getElementById('workoutDayEl').innerHTML = `
+    <div style="background:#ffffff;border-radius:16px;padding:1.1rem;margin-bottom:0.8rem;box-shadow:0 2px 16px rgba(0,0,0,0.07);">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.8rem;">
+        <div>
+          <div style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;color:#1a1a1a;">${s.day} — ${s.type}</div>
+          <div style="font-size:0.72rem;color:#7a7570;margin-top:0.1rem;">${isCardioExt ? '🏃 Cardio al aire libre' : '🏠 En casa sin material'}</div>
+        </div>
+        <button onclick="closeWorkoutDay()" style="background:#f5f2ed;border:none;border-radius:8px;padding:0.4rem 0.7rem;font-size:0.75rem;cursor:pointer;color:#7a7570;">✕</button>
+      </div>
+      ${exHtml}
+      <button onclick="markWorkoutDone('${s.day}')" style="width:100%;background:${done?'#52b788':'#2d6a4f'};color:white;border:none;border-radius:12px;padding:0.85rem;font-family:'Syne',sans-serif;font-size:0.88rem;font-weight:700;cursor:pointer;margin-top:0.5rem;">
+        ${done ? '✅ Completado — toca para desmarcar' : '✅ Marcar como completado'}
+      </button>
+    </div>`;
+
+  document.getElementById('workoutDayEl').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function markWorkoutDone(dayName) {
+  const weekKey = getWeekKey();
+  const logKey = `${weekKey}-${dayName}`;
+  workoutLog[logKey] = !workoutLog[logKey];
+  localStorage.setItem('workoutLog', JSON.stringify(workoutLog));
+  const idx = workoutPlan.sessions.findIndex(s => s.day === dayName);
+  renderWorkoutWeek();
+  if (idx >= 0) openWorkoutDay(idx);
+  showToast(workoutLog[logKey] ? '🏆 ¡Entreno completado!' : 'Entreno desmarcado');
+}
+
+function closeWorkoutDay() {
+  document.getElementById('workoutDayEl').innerHTML = '';
+  document.getElementById('exerciseDetailEl').innerHTML = '';
+  selectedWorkoutDay = null;
+}
+
+function openExerciseDetail(exId) {
+  const ex = exerciseDB[exId];
+  if (!ex) return;
+  const sets = ex.sets[workoutPlan?.level || 'intermediate'];
+  const isExt = ex.type === 'cardio-ext';
+  const setsLabel = isExt ? '⏱ Duración' : '📋 Series';
+  document.getElementById('exerciseDetailEl').innerHTML = `
+    <div style="background:linear-gradient(135deg,#1a2f23,#2d6a4f);border-radius:16px;padding:1.1rem;margin-bottom:0.8rem;color:white;">
+      <div style="display:flex;align-items:center;gap:0.8rem;margin-bottom:0.8rem;">
+        <div style="font-size:2rem;">${ex.emoji}</div>
+        <div>
+          <div style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;">${ex.name}</div>
+          <div style="font-size:0.72rem;opacity:0.75;">${ex.muscle}</div>
+        </div>
+        <button onclick="document.getElementById('exerciseDetailEl').innerHTML=''" style="margin-left:auto;background:rgba(255,255,255,0.15);border:none;border-radius:8px;padding:0.3rem 0.6rem;color:white;cursor:pointer;font-size:0.75rem;">✕</button>
+      </div>
+      <div style="background:rgba(255,255,255,0.12);border-radius:10px;padding:0.7rem 0.9rem;margin-bottom:0.7rem;">
+        <div style="font-family:'Syne',sans-serif;font-size:0.82rem;font-weight:700;margin-bottom:0.3rem;">${setsLabel} · ${sets}</div>
+        <div style="font-size:0.78rem;opacity:0.85;line-height:1.5;">${ex.desc}</div>
+      </div>
+      <div style="font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;margin-bottom:0.4rem;">💡 Consejos</div>
+      ${ex.tips.map(t => `<div style="font-size:0.75rem;opacity:0.85;margin-bottom:0.3rem;padding-left:0.5rem;">· ${t}</div>`).join('')}
+    </div>`;
+  document.getElementById('exerciseDetailEl').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function initExerciseScreen() {
+  const saved = JSON.parse(localStorage.getItem('workoutPlan') || 'null');
+  if (saved) {
+    workoutPlan = saved;
+    document.getElementById('trainDays').value  = saved.days;
+    document.getElementById('trainLevel').value = saved.level;
+    renderWorkoutWeek();
+  } else {
+    renderWorkoutWeek();
+  }
 }
 
 document.getElementById('recipeSearch').addEventListener('input', e => { buildRecipeGrid(e.target.value); });
